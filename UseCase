@@ -1,0 +1,7 @@
+
+//Since trigger will only help when something is been changes in cases or account then only it will calculate the values so if there is an requirement where we need to fetch all cases count where orgign is phone,email 
+we can create a class and a method then we can call it from anynonmus window.
+
+//If the requirement is to run this every day or weekly instead of manually doing it we can use sheduled apex and then we can call the class weekly or daily basis.
+
+//In this module I am creating an future method in this module and later on I will add all scheduled apex as well.
