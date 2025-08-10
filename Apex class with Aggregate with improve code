@@ -1,0 +1,46 @@
+public class Account10Aug {
+    
+    public static void getAllCount(List<Case> casesz) {
+        Set<Id> accountIds = new Set<Id>();
+        for (Case c : casesz) {
+            if (c.AccountId != null) {
+                accountIds.add(c.AccountId);
+            }
+        }
+
+        if (accountIds.isEmpty()) {
+            return; // No accounts to process
+        }
+
+        // Directly query into a map
+        Map<Id, Account> mapOfAcc = new Map<Id, Account>(
+            [SELECT Id, Name, No_of_case_Phone__c, No_of_case_Email__c 
+             FROM Account 
+             WHERE Id IN :accountIds]
+        );
+
+        // Aggregate counts by origin
+        List<AggregateResult> agg = [
+            SELECT COUNT(Id) cnt, AccountId, Origin 
+            FROM Case 
+            WHERE AccountId IN :accountIds 
+            GROUP BY AccountId, Origin
+        ];
+
+        for (AggregateResult ar : agg) {
+            Integer cntOf = (Integer) ar.get('cnt');
+            Id accId = (Id) ar.get('AccountId');
+            String originVal = (String) ar.get('Origin');
+
+            if (mapOfAcc.containsKey(accId)) {
+                if ('Phone'.equalsIgnoreCase(originVal)) {
+                    mapOfAcc.get(accId).No_of_case_Phone__c = cntOf;
+                } else if ('Email'.equalsIgnoreCase(originVal)) {
+                    mapOfAcc.get(accId).No_of_case_Email__c = cntOf;
+                }
+            }
+        }
+
+        update mapOfAcc.values();
+    }
+}
