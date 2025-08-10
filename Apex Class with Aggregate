@@ -1,0 +1,30 @@
+public class Account10Aug {
+    
+    public static void getallcount(List<case>casesz){
+        set<Id>accountid=new Set<Id>();
+        for(case con : casesz){
+              if(con.AccountId!=null)
+                  accountid.add(con.AccountId);
+        }
+        List<Account>acc=[select Id,Name,No_of_case_Phone__c,No_of_case_Email__c from Account where Id IN : accountid];
+        Map<Id,Account>mapofacc=new Map<Id,Account>();
+        for(Account acnt : acc){
+            mapofacc.put(acnt.Id,acnt);
+        }
+        List<AggregateResult>agg=[select count(id) cnt,AccountId,Origin from case where AccountID IN:accountid group by AccountId,Origin];
+        for(AggregateResult aggs : agg){
+            Account news=new Account();
+            Integer cntof=(Integer)aggs.get('cnt');
+            Id Idacc = (ID) aggs.get('AccountId');
+            
+            if(aggs.get('Origin')=='Phone'){ 
+                mapofacc.get(idacc).No_of_case_Phone__c=cntof;
+            }
+            if(aggs.get('Origin')=='Email'){
+                 mapofacc.get(idacc).No_of_case_Email__c=cntof;
+            }
+        }
+        update mapofacc.values();
+    }
+
+}
