@@ -1,0 +1,5 @@
+trigger CaseTriggerTest on Case (after insert, after update) {
+    
+    Account10Aug.getallcount(trigger.new);
+
+}
