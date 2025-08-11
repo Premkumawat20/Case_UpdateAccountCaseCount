@@ -1,0 +1,23 @@
+public class Account10Aug {
+ 
+     @future   
+    public static void getallcount(List<ID>acclist){
+        
+    List<Account>acc=[select Id,No_of_case_Phone__c,No_of_case_Email__c,(select Id,Origin,AccountId from cases) from Account where Id IN : acclist];
+        for(Account acs : acc){
+            Integer email=0,phone=0;
+            for(case cs : acs.cases){
+                if(cs.Origin=='phone')
+                    phone++;
+               else if(cs.origin=='email')
+                   email++;
+            }
+            acs.No_of_case_Phone__c=phone;
+            acs.No_of_case_Email__c=email;
+        }
+        if(!acc.isempty()){
+            update acc;            
+        }
+    }
+   
+    }
